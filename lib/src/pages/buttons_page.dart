@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -5,10 +7,30 @@ class ButtonsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: <Widget>[_backgroundApp()],
-      ),
-    );
+        body: Stack(
+          children: <Widget>[
+            _backgroundApp(),
+            SingleChildScrollView(
+              child: Column(
+                children: [_titles(), _roundedButtons()],
+              ),
+            )
+          ],
+        ),
+        bottomNavigationBar: _bottomNavigationBar(context)
+        // Si se hace de esta forma las opciones de personalizacion son muy limitadas
+        // BottomNavigationBar(
+        //   fixedColor: Colors.pink,
+        //   items: [
+        //     BottomNavigationBarItem(
+        //         icon: Icon(Icons.calendar_today), title: Container()),
+        //     BottomNavigationBarItem(
+        //         icon: Icon(Icons.pie_chart_outlined), title: Container()),
+        //     BottomNavigationBarItem(
+        //         icon: Icon(Icons.supervised_user_circle), title: Container())
+        //   ],
+        // ),
+        );
   }
 
   Widget _backgroundApp() {
@@ -45,6 +67,112 @@ class ButtonsPage extends StatelessWidget {
           top: -100.0,
         )
       ],
+    );
+  }
+
+  Widget _titles() {
+    return SafeArea(
+      child: Container(
+        padding: EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Classify transaction',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.bold)),
+            SizedBox(height: 10.0),
+            Text('Classify this transaction into a particular category',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15.0,
+                )),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _bottomNavigationBar(BuildContext context) {
+    return Theme(
+      data: Theme.of(context).copyWith(
+          canvasColor: Color.fromRGBO(55, 57, 85, 1.0),
+          primaryColor: Colors.pinkAccent,
+          textTheme: Theme.of(context).textTheme.copyWith(
+              caption: TextStyle(color: Color.fromRGBO(116, 117, 152, 1.0)))),
+      child: BottomNavigationBar(items: [
+        BottomNavigationBarItem(
+            icon: Icon(
+              Icons.calendar_today,
+              size: 30.0,
+            ),
+            title: Container()),
+        BottomNavigationBarItem(
+            icon: Icon(
+              Icons.bubble_chart,
+              size: 30.0,
+            ),
+            title: Container()),
+        BottomNavigationBarItem(
+            icon: Icon(
+              Icons.supervised_user_circle,
+              size: 30.0,
+            ),
+            title: Container()),
+      ]),
+    );
+  }
+
+  Widget _roundedButtons() {
+    return Table(
+      children: [
+        TableRow(children: [
+          _createRoundedButton(Colors.blue, Icons.border_all, 'General'),
+          _createRoundedButton(Colors.purpleAccent, Icons.directions, 'Bus')
+        ]),
+        TableRow(children: [
+          _createRoundedButton(Colors.pinkAccent, Icons.shop, 'Buy'),
+          _createRoundedButton(Colors.orange, Icons.insert_drive_file, 'File')
+        ]),
+        TableRow(children: [
+          _createRoundedButton(
+              Colors.blueAccent, Icons.movie_filter, 'Enterteiment'),
+          _createRoundedButton(Colors.green, Icons.cloud, 'Grocery')
+        ]),
+        TableRow(children: [
+          _createRoundedButton(Colors.red, Icons.collections, 'Photos'),
+          _createRoundedButton(Colors.teal, Icons.help_outline, 'Info')
+        ])
+      ],
+    );
+  }
+
+  Widget _createRoundedButton(Color color, IconData icon, String text) {
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+        child: Container(
+          height: 180.0,
+          margin: EdgeInsets.all(15.0),
+          decoration: BoxDecoration(
+              color: Color.fromRGBO(62, 66, 107, 0.7),
+              borderRadius: BorderRadius.circular(20.0)),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              SizedBox(height: 5.0),
+              CircleAvatar(
+                backgroundColor: color,
+                radius: 35.0,
+                child: Icon(icon, color: Colors.white, size: 30.0),
+              ),
+              Text(text, style: TextStyle(color: color)),
+              SizedBox(height: 5.0)
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
